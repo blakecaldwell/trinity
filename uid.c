@@ -129,7 +129,10 @@ changed:
 		if (myuid == 65534)
 			return;
 
-		output(0, "uid changed! Was: %u, now %u\n", orig_uid, myuid);
+		if (do_spawn_userns == TRUE)
+			return;
+		else
+			output(0, "uid changed! Was: %u, now %u\n", orig_uid, myuid);
 
 		panic(EXIT_UID_CHANGED);
 		_exit(EXIT_FAILURE);

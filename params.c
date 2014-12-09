@@ -46,6 +46,8 @@ unsigned int random_selection_num;
 
 bool user_set_seed = FALSE;
 
+bool do_spawn_userns = TRUE;
+
 unsigned char desired_group = GROUP_NONE;
 
 char *specific_domain_optarg = NULL;
@@ -90,6 +92,7 @@ static void usage(void)
 	outputerr(" --syslog,-S: log important info to syslog. (useful if syslog is remote)\n");
 	outputerr(" --verbose,-v: increase output verbosity.\n");
 	outputerr(" --victims,-V: path to victim files.\n");
+	outputerr(" --userns,-u: run children within user namespace.\n");
 	outputerr("\n");
 	outputerr(" -c#,@: target specific syscall (takes syscall name as parameter and optionally 32 or 64 as bit-width. Default:both).\n");
 	outputerr(" -N#: do # syscalls then exit.\n");
@@ -97,7 +100,7 @@ static void usage(void)
 	exit(EXIT_SUCCESS);
 }
 
-static const char paramstr[] = "a:b:c:C:dDE:g:hIl:LmN:P:qr:s:ST:V:vx:X";
+static const char paramstr[] = "a:b:c:C:dDE:g:hIl:LmN:P:qr:s:ST:V:vx:Xu";
 
 static const struct option longopts[] = {
 	{ "arch", required_argument, NULL, 'a' },
@@ -127,6 +130,7 @@ static const struct option longopts[] = {
 	{ "syslog", no_argument, NULL, 'S' },
 	{ "verbose", no_argument, NULL, 'v' },
 	{ "victims", required_argument, NULL, 'V' },
+	{ "userns", no_argument, NULL, 'u' },
 	{ NULL, 0, NULL, 0 } };
 
 void parse_args(int argc, char *argv[])
@@ -296,6 +300,10 @@ void parse_args(int argc, char *argv[])
 
 		case 'X':
 			dropprivs = TRUE;
+			break;
+
+		case 'u':
+			do_spawn_userns = TRUE;
 			break;
 
 		case 0:

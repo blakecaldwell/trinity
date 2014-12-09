@@ -21,6 +21,8 @@
 #include "tables.h"
 #include "taint.h"
 #include "trinity.h"
+#include "params.h"
+#include "namespace.h"
 
 static void handle_child(int childno, pid_t childpid, int childstatus);
 
@@ -388,7 +390,10 @@ static bool spawn_child(int childno)
 	pid = fork();
 
 	if (pid == 0) {
-		child_process(child, childno);
+		if (do_spawn_userns == TRUE)
+			create_userns(child, childno);
+		else
+			child_process(child, childno);
 		_exit(EXIT_SUCCESS);
 	} else {
 		if (pid == -1) {

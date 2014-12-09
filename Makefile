@@ -36,8 +36,9 @@ CFLAGS += -Wwrite-strings
 CFLAGS += -Wno-format-nonliteral
 CFLAGS += -Wstrict-prototypes -Wmissing-prototypes
 
+LDFLAGS = "-Wl,--no-as-needed"
 # needed for show_backtrace() to work correctly.
-LDFLAGS += -rdynamic
+LDFLAGS += -rdynamic -lcap
 
 # glibc versions before 2.17 for clock_gettime
 LDLIBS += -lrt
